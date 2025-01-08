@@ -113,6 +113,7 @@ public class CreatePersona {
 		Double schemaversion = tbl.keys().nextElement();
 		List<MosipIDSchema>  lstSchema =(List<MosipIDSchema>) tbl.get(schemaversion).get("schemaList");
 		List<String> requiredAttribs = (List<String>) tbl1.get(schemaversion).get("requiredAttributes");
+		//List<String> requiredAttribs = (List<String>) tbl1.get(schemaversion).get("requiredAttributes");
 		JSONArray locaitonherirachyArray = (JSONArray)tbl.get(schemaversion).get("locaitonherirachy");
 		
 		JSONObject identity = new JSONObject();
@@ -138,6 +139,7 @@ public class CreatePersona {
 			
 			if (!CommonUtil.isExists(requiredAttribs, schemaItem.getId()))
 				continue;
+			/*
 			 
 			 
 			if(lstMissedAttributes != null && lstMissedAttributes.stream().anyMatch( v -> v.equalsIgnoreCase(schemaItem.getId()))) {
@@ -395,6 +397,7 @@ public class CreatePersona {
 				 * Double.toString(schemaversion);
 				 */
 				constructNode(identity, schemaItem.getId(), resident.getPrimaryLanguage(),
+				return constructNode(identity, schemaItem.getId(), resident.getPrimaryLanguage(),
 						resident.getSecondaryLanguage(),
 						someVal,
 						someVal,

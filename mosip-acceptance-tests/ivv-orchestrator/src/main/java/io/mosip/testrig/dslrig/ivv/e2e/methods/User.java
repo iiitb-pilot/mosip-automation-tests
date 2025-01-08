@@ -71,6 +71,7 @@ public class User extends BaseTestCaseUtil implements StepInterface {
 			if (user.startsWith("$$")) {
 				map = step.getScenario().getVariables();
 				user = map.get("userid" + indexOfUser);
+				zone = map.get("zoneCode");
 
 			}
 		}
