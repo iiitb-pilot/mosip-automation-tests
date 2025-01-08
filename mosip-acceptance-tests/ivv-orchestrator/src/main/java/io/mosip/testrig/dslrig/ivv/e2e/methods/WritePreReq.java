@@ -8,11 +8,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.testng.Reporter;
 import io.mosip.testrig.apirig.kernel.util.ConfigManager;
-import io.mosip.testrig.apirig.service.BaseTestCase;
 import io.mosip.testrig.dslrig.ivv.core.base.StepInterface;
 import io.mosip.testrig.dslrig.ivv.core.exceptions.RigInternalError;
 import io.mosip.testrig.dslrig.ivv.orchestrator.BaseTestCaseUtil;
-import io.mosip.testrig.dslrig.ivv.orchestrator.TestRunner;
 
 public class WritePreReq extends BaseTestCaseUtil implements StepInterface {
 	static Logger logger = Logger.getLogger(WritePreReq.class);
@@ -48,29 +46,23 @@ public class WritePreReq extends BaseTestCaseUtil implements StepInterface {
 		Properties kernelprops = ConfigManager.propsKernel;
 		try {
 			props.putAll(kernelprops);
-			boolean same=false;
 			for (Map.Entry<String, String> entry : map.entrySet()) {
-				if(entry.getValue()!=null)
-				{String key = entry.getKey();
-				String val = entry.getValue();
-				
-				String propValue = props.getProperty(key);
-				
-				logger.info("key="+key + "Value="+val + "propvalue" + propValue);
-				if(propValue != null && val !=null && propValue.equalsIgnoreCase(val))
-				 same=true;
-				
-				if(same==false)
-					props.setProperty(entry.getKey(), entry.getValue());
-				}}
-			//props.putAll(map);
+				if (entry.getValue() != null) {
+					String key = entry.getKey();
+					String val = entry.getValue();
+					String propValue = props.getProperty(key);
+					if (propValue != null && propValue.equalsIgnoreCase(val)) continue;
 
-			String path = (TestRunner.getExternalResourcePath() + "/config/" + BaseTestCase.environment + "_prereqdata_"
-					+ appendedkey + ".properties");
+					props.setProperty(key, val);
+				}
+			}
+
+			String path = ("prereqdata_" + appendedkey);
 			HashMap<String, String> propertiesMap = new HashMap<String, String>();
 			for (Entry<Object, Object> entry : props.entrySet()) {
 				propertiesMap.put((String) entry.getKey(), (String) entry.getValue());
 			}
+
 			prereqDataSet.put(path, propertiesMap);
 			if (ConfigManager.IsDebugEnabled())
 				Reporter.log(props.toString());
