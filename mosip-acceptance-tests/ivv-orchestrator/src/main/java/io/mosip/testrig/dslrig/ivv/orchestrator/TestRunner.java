@@ -27,12 +27,14 @@ public class TestRunner {
 	public static String jarUrl = TestRunner.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
 	public static void main(String[] args) {
-		removeOldMosipTestTestResource();
+
 		if (checkRunType().equalsIgnoreCase("JAR")) {
 			extractResourceFromJar();
+		} else {
+			removeOldMosipTestTestResource();
+			copyTestResources();
 		}
-		
-		copyTestResources();
+
 		BaseTestCase.environment = System.getProperty("env.user");
 		BaseTestCase.ApplnURI = System.getProperty("env.endpoint");
 		BaseTestCase.testLevel = System.getProperty("env.testLevel");
@@ -71,7 +73,7 @@ public class TestRunner {
 		List<String> suitefiles = new ArrayList<String>();
 		String os = System.getProperty("os.name");
 		LOGGER.info(os);
-		if (checkRunType().contains("IDE") || os.toLowerCase().contains("windows") == true) {
+		if (checkRunType().contains("IDE") && os.toLowerCase().contains("windows") == true) {
 			homeDir = new File(TestResources.getResourcePath().replace("/MosipTestResource/MosipTemporaryTestResource", "") + "testngFile");
 			LOGGER.info("IDE Home Dir=" + homeDir);
 		} else {
@@ -132,15 +134,19 @@ public class TestRunner {
 	}
 
 	public static void extractResourceFromJar() {
-		getListOfFilesFromJarAndCopyToExternalResource("testngFile/");
-		getListOfFilesFromJarAndCopyToExternalResource("config/");
-		getListOfFilesFromJarAndCopyToExternalResource("local/");
-		getListOfFilesFromJarAndCopyToExternalResource("preReg/");
-		getListOfFilesFromJarAndCopyToExternalResource("kernel/");
-		getListOfFilesFromJarAndCopyToExternalResource("idaData/");
-		getListOfFilesFromJarAndCopyToExternalResource("ivv_masterdata/");
-		getListOfFilesFromJarAndCopyToExternalResource("syncdata/");
-		getListOfFilesFromJarAndCopyToExternalResource("regproc/");
+		File mosipTestFile = new File(TestRunner.getGlobalResourcePath());
+		if (!mosipTestFile.exists()) {
+			getListOfFilesFromJarAndCopyToExternalResource("testngFile/");
+			getListOfFilesFromJarAndCopyToExternalResource("config/");
+			getListOfFilesFromJarAndCopyToExternalResource("local/");
+			getListOfFilesFromJarAndCopyToExternalResource("preReg/");
+			getListOfFilesFromJarAndCopyToExternalResource("kernel/");
+			getListOfFilesFromJarAndCopyToExternalResource("idaData/");
+			getListOfFilesFromJarAndCopyToExternalResource("ivv_masterdata/");
+			getListOfFilesFromJarAndCopyToExternalResource("syncdata/");
+			getListOfFilesFromJarAndCopyToExternalResource("regproc/");
+			copyTestResources();
+		}
 	}
 
 	public static void getListOfFilesFromJarAndCopyToExternalResource(String key) {
